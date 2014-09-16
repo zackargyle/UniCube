@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <title>UniCube</title>
+    <meta name="author" content="Zack Argye" />
+    <link rel="stylesheet" href="main.css" />
+</head>
+<body>
+    <article class="viewport">
+        <section class="cube">
+            <div id="top">TOP</div>
+            <div id="front">FRONT</div>
+            <div id="right">RIGHT</div>
+            <div id="back">BACK</div>
+            <div id="left">LEFT</div>
+            <div id="bottom">BOTTOM</div>
+        </section>
+    </article>
+
+    <script src="UniCube.js"></script>
+    <script type="text/javascript">
+        var cube = new UniCube()
+          , index = 0
+          , _directions = ["LEFT", "DOWN", "UP", "RIGHT"];
+
+        // setInterval(function() {
+        //     cube.flip(directions[index++]);
+        //     index = index === 4 ? 0 : index;
+        // }, 1500);
+    </script>
+</body>
+</html>
