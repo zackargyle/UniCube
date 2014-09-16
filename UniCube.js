@@ -41,6 +41,11 @@ UniCube.prototype.flip = function(dir) {
     if (directions.indexOf(dir) !== -1) {
         this.direction = dir;
     }
+
+    if (this.direction !== null) {
+        this._setContent();
+    }
+
     if (dir === "LEFT") {
         this.move({y: this.y + 90});
     } else if (dir === "RIGHT") {
