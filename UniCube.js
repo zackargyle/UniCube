@@ -21,6 +21,7 @@ var mouse = { start : {} }
 function UniCube(cube, content) {
     this.horizontalFlip = false;
     this.touchDisabled = false;
+    this.inMovement = false;
     this.direction = null;
     this.content = content;
     this.x = 0;
@@ -77,8 +78,10 @@ UniCube.prototype.onFlipEnd = function(fn) {
             else if (this.x === -90) side = this.sides.top;
             else side = this.sides[cycleArray(sides, Math.floor(-this.y / 90))];
 
-            fn(this.direction, side);
-            this.direction = null;
+            if (!this.inMovement) {
+                fn(this.direction, side);
+                this.direction = null;
+            }
         }.bind(this));
     }
 }
@@ -145,7 +148,10 @@ UniCube.prototype._bindKeydown = function() {
         evt.touches ? evt = evt.touches[0] : null;
         mouse.start.x = evt.pageX;
         mouse.start.y = evt.pageY;
-        this.direction = null;
+        _this.startX = evt.pageX;
+        _this.startY = evt.pageY;
+        _this.direction = null;
+        _this.inMovement = true;
 
         document.addEventListener("mousemove", moveHandler);
         document.addEventListener("touchmove", moveHandler);
@@ -168,6 +174,7 @@ UniCube.prototype._bindKeydown = function() {
         document.removeEventListener("mousemove", moveHandler);
         document.removeEventListener("touchmove", moveHandler);
         _this._settle();
+        _this.inMovement = false;
     }
 
 }
@@ -176,10 +183,11 @@ UniCube.prototype._handleMousemove = function(movedMouse) {
     // Reduce movement on touch screens
     var movementScaleFactor = touch ? 4 : 1;
 
-    if (!this.direction) {
+    if (!this.direction || this._directionChanged(movedMouse)) {
         this._getTouchDirection(movedMouse);
         if (!this.direction) return
-    } else if (this._directionDisabled()) {
+    }
+    if (this._directionDisabled(movedMouse)) {
         return;
     }
 
@@ -219,20 +227,35 @@ UniCube.prototype._createSides = function() {
     }
 }
 
+UniCube.prototype._directionChanged = function(movedMouse) {
+    var diffX = this.startX - movedMouse.x;
+    var diffY = this.startY - movedMouse.y;
+
+    if (this.direction === "DOWN") {
+        return diffY < 3;
+    } else if (this.direction === "UP") {
+        return diffY > 3;
+    } else if (this.direction === "RIGHT") {
+        return diffX > 3;
+    } else if (this.direction === "LEFT") {
+        return diffX < 3;
+    }
+}
+
 UniCube.prototype._getTouchDirection = function(movedMouse) {
     var diffX = mouse.start.x - movedMouse.x;
     var diffY = mouse.start.y - movedMouse.y;
 
     if (Math.abs(diffX) > 3 || Math.abs(diffY) > 3) {
-        this.horizontalFlip = Math.abs(diffX) < Math.abs(diffY);
+        if (!this.direction) {
+            this.horizontalFlip = Math.abs(diffX) < Math.abs(diffY);
+        }
 
         if (!this.horizontalFlip) {
             this.direction = diffX < 0 ? "LEFT" : "RIGHT";
         } else {
             this.direction = diffY < 0 ? "UP" : "DOWN";
         }
-    } else {
-        this.direction = null;
     }
 }
 
