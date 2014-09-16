@@ -18,27 +18,20 @@ var mouse = { start : {} }
   , directions = ["LEFT", "UP", "RIGHT", "DOWN"]
   , sides = ["front", "right", "back", "left"];
 
-function UniCube(content) {
+function UniCube(cube, content) {
     this.horizontalFlip = false;
     this.touchDisabled = false;
     this.direction = null;
     this.content = content;
     this.x = 0;
     this.y = 0;
-    this.el = document.querySelectorAll(".cube")[0];
-
-    this.sides = {
-        front: this.el.querySelectorAll(".unicube-front")[0],
-        right: this.el.querySelectorAll(".unicube-right")[0],
-        back: this.el.querySelectorAll(".unicube-back")[0],
-        left: this.el.querySelectorAll(".unicube-left")[0],
-        top: this.el.querySelectorAll(".unicube-top")[0],
-        bottom: this.el.querySelectorAll(".unicube-bottom")[0],
-    }
+    this.el = cube;
 
     var d = touch ? 50 : 200;
     this.el.style[transitionDurationProp] = d + "ms";
 
+    this.sides = {};
+    this._createSides();
     this._bindKeydown();
     this._setContent();
 }
@@ -214,6 +207,16 @@ UniCube.prototype._handleMousemove = function(movedMouse) {
     mouse.last.x = movedMouse.x;
     mouse.last.y = movedMouse.y;
     this._setContent();
+}
+
+UniCube.prototype._createSides = function() {
+    var sides = ["front", "right", "back", "left", "top", "bottom"];
+    for (var i = 0, l = sides.length; i < l; ++i) {
+        var side = document.createElement("div");
+        side.className = "unicube-" + sides[i];
+        this.el.appendChild(side);
+        this.sides[sides[i]] = side;
+    }
 }
 
 UniCube.prototype._getTouchDirection = function(movedMouse) {

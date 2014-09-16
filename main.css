@@ -15,7 +15,7 @@ h2 {
     transform: scale(0.75,0.75);
 }
 
-.cube {
+.unicube {
     position: relative;
     margin: 0 auto 100px;
     height: 400px;
@@ -31,21 +31,21 @@ h2 {
     transform: rotateX(0deg) rotateY(0deg);
 }
 
-.cube:hover {
+.unicube:hover {
     cursor: pointer;
 }
 
-.cube h2 {
+.unicube h2 {
     color: #fff;
     padding-top: 0;
     margin-top: 0;
 }
 
-.cube a {
+.unicube a {
     color: #fff;
 }
 
-.cube > div {
+.unicube > div {
     position: absolute;
     height: 360px;
     width: 360px;

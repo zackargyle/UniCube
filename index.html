@@ -9,19 +9,13 @@
 </head>
 <body>
     <article class="viewport">
-        <section class="cube">
-            <div class="unicube-front"></div>
-            <div class="unicube-right"></div>
-            <div class="unicube-back"></div>
-            <div class="unicube-left"></div>
-            <div class="unicube-top"></div>
-            <div class="unicube-bottom"></div>
-        </section>
+        <section id="cube1" class="unicube"></section>
     </article>
 
     <script src="UniCube.js"></script>
     <script type="text/javascript">
-        var cube = new UniCube([
+        var htmlCube = document.getElementById("cube1");
+        var cube = new UniCube(htmlCube, [
             [1.1, 1.2, 1.3],
             [2.1, 2.2, 2.3],
             [3.1, 3.2, 3.3],
@@ -32,6 +26,10 @@
         cube.onFlipEnd(function(direction, side) {
             console.log(direction, side);
         });
+
+        /* TODO
+         - Direction Change
+        */
 
     </script>
 </body>g
