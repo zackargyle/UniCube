@@ -20,6 +20,7 @@ var mouse = { start : {} }
 
 function UniCube(data) {
     this.horizontalFlip = true;
+    this.touchDisabled = false;
     this.direction = null;
     this.x = 0;
     this.y = 0;
@@ -58,6 +59,10 @@ UniCube.prototype.move = function(coords) {
     this.el.style[transformProp] = "rotateX("+this.x+"deg) rotateY("+this.y+"deg)";
 }
 
+UniCube.prototype.disableTouch = function(value) {
+    this.touchDisabled = value;
+}
+
 UniCube.prototype.onFlipEnd = function(fn) {
     var events = ["webkitTransitionEnd", "oTransitionEnd", "transitionend"];
 
@@ -82,8 +87,10 @@ UniCube.prototype._bindKeydown = function() {
         if (evt.keyCode === 27) {
             return _this.reset();
         }
-        _this.direction = directions[evt.keyCode - 37];
-        _this.flip(_this.direction);
+        if (evt.keyCode >= 37 && evt.keyCode <= 40) {
+            _this.direction = directions[evt.keyCode - 37];
+            _this.flip(_this.direction);
+        }
     });
 
     document.addEventListener("mousedown", startHandler);
@@ -92,6 +99,7 @@ UniCube.prototype._bindKeydown = function() {
     function startHandler(evt) {
         delete mouse.last;
         if(evt.target.nodeName === "a") return true;
+        if (_this.touchDisabled) return ;
 
         evt.touches ? evt = evt.touches[0] : null;
         mouse.start.x = evt.pageX;
