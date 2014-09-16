@@ -15,7 +15,8 @@ function support(props) {
 
 var mouse = { start : {} }
   , touch = document.ontouchmove !== undefined
-  , directions = ["LEFT", "UP", "RIGHT", "DOWN"];
+  , directions = ["LEFT", "UP", "RIGHT", "DOWN"]
+  , sides = ["front", "right", "back", "left"];
 
 function UniCube(data) {
     this.horizontalFlip = true;
@@ -45,6 +46,10 @@ UniCube.prototype.flip = function(dir) {
     }
 }
 
+UniCube.prototype.reset = function() {
+    this.move({x: 0, y: 0});
+}
+
 UniCube.prototype.move = function(coords) {
     if(coords && !this._directionDisabled()) {
         if(typeof coords.x === "number") this.x = coords.x;
@@ -53,14 +58,21 @@ UniCube.prototype.move = function(coords) {
     this.el.style[transformProp] = "rotateX("+this.x+"deg) rotateY("+this.y+"deg)";
 }
 
+UniCube.prototype.onFlipEnd = function(fn) {
+    var events = ["webkitTransitionEnd", "oTransitionEnd", "transitionend"];
+
+    for (var i = 0, l = events.length; i < l; ++i) {
+        this.el.addEventListener(events[i], function(e) {
+            fn(this.direction);
+            this.direction = null;
+        }.bind(this));
+    }
+}
+
 UniCube.prototype._settle = function() {
     this.x = Math.round(this.x / 90) * 90;
     this.y = Math.round(this.y / 90) * 90;
     this.el.style[transformProp] = "rotateX("+this.x+"deg) rotateY("+this.y+"deg)";
-}
-
-UniCube.prototype.reset = function() {
-    this.move({x: 0, y: 0});
 }
 
 UniCube.prototype._bindKeydown = function() {
@@ -84,6 +96,7 @@ UniCube.prototype._bindKeydown = function() {
         evt.touches ? evt = evt.touches[0] : null;
         mouse.start.x = evt.pageX;
         mouse.start.y = evt.pageY;
+        this.direction = null;
 
         document.addEventListener("mousemove", moveHandler);
         document.addEventListener("touchmove", moveHandler);
@@ -106,7 +119,6 @@ UniCube.prototype._bindKeydown = function() {
         document.removeEventListener("mousemove", moveHandler);
         document.removeEventListener("touchmove", moveHandler);
         _this._settle();
-        _this.direction = null;
     }
 
 }

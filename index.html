@@ -10,12 +10,12 @@
 <body>
     <article class="viewport">
         <section class="cube">
-            <div id="top">TOP</div>
-            <div id="front">FRONT</div>
-            <div id="right">RIGHT</div>
-            <div id="back">BACK</div>
-            <div id="left">LEFT</div>
-            <div id="bottom">BOTTOM</div>
+            <div class="unicube-front">FRONT</div>
+            <div class="unicube-right">RIGHT</div>
+            <div class="unicube-back">BACK</div>
+            <div class="unicube-left">LEFT</div>
+            <div class="unicube-top">TOP</div>
+            <div class="unicube-bottom">BOTTOM</div>
         </section>
     </article>
 
@@ -25,10 +25,14 @@
           , index = 0
           , _directions = ["LEFT", "DOWN", "UP", "RIGHT"];
 
+        cube.onFlipEnd(function(direction) {
+            console.log(direction);
+        });
+
         // setInterval(function() {
         //     cube.flip(directions[index++]);
         //     index = index === 4 ? 0 : index;
         // }, 1500);
     </script>
-</body>
+</body>g
 </html>
