@@ -77,6 +77,8 @@ UniCube.prototype.onFlipEnd = function(fn) {
 UniCube.prototype._settle = function() {
     this.x = Math.round(this.x / 90) * 90;
     this.y = Math.round(this.y / 90) * 90;
+    if (this.x > 90) this.x = 90;
+    if (this.x < -90) this.x = -90;
     this.el.style[transformProp] = "rotateX("+this.x+"deg) rotateY("+this.y+"deg)";
 }
 
