@@ -18,18 +18,29 @@ var mouse = { start : {} }
   , directions = ["LEFT", "UP", "RIGHT", "DOWN"]
   , sides = ["front", "right", "back", "left"];
 
-function UniCube(data) {
-    this.horizontalFlip = true;
+function UniCube(content) {
+    this.horizontalFlip = false;
     this.touchDisabled = false;
     this.direction = null;
+    this.content = content;
     this.x = 0;
     this.y = 0;
     this.el = document.querySelectorAll(".cube")[0];
+
+    this.sides = {
+        front: this.el.querySelectorAll(".unicube-front")[0],
+        right: this.el.querySelectorAll(".unicube-right")[0],
+        back: this.el.querySelectorAll(".unicube-back")[0],
+        left: this.el.querySelectorAll(".unicube-left")[0],
+        top: this.el.querySelectorAll(".unicube-top")[0],
+        bottom: this.el.querySelectorAll(".unicube-bottom")[0],
+    }
 
     var d = touch ? 50 : 200;
     this.el.style[transitionDurationProp] = d + "ms";
 
     this._bindKeydown();
+    this._setContent();
 }
 
 UniCube.prototype.flip = function(dir) {
@@ -68,9 +79,44 @@ UniCube.prototype.onFlipEnd = function(fn) {
 
     for (var i = 0, l = events.length; i < l; ++i) {
         this.el.addEventListener(events[i], function(e) {
-            fn(this.direction);
+            var side;
+            if (this.x === 90) side = this.sides.bottom;
+            else if (this.x === -90) side = this.sides.top;
+            else side = this.sides[cycleArray(sides, Math.floor(-this.y / 90))];
+
+            fn(this.direction, side);
             this.direction = null;
         }.bind(this));
+    }
+}
+
+UniCube.prototype._setContent = function() {
+    var indexSide = Math.floor(-this.y / 90)
+      , dir = this.direction || "LEFT"
+      , side1, side2, nextIndex, indexTop;
+
+    if (this.horizontalFlip) {
+        indexTop = (this.x === 90 ? 2 : (this.x === -90) ? 0 : 1);
+        nextIndex = (dir === "UP" ? indexTop + 1 : indexTop - 1);
+
+        if (indexTop === 2) {
+            side1 = this.sides.top;
+            side2 = this.sides[cycleArray(sides, indexSide)];
+        } else if (indexTop === 0) {
+            side1 = this.sides.bottom;
+            side2 = this.sides[cycleArray(sides, indexSide)];
+        } else {
+            side1 = this.sides[cycleArray(sides, indexSide)];
+            side2 = dir === "UP" ? this.sides.top : this.sides.bottom;
+        }
+        side1.innerHTML = cycleArray(this.content, indexSide)[indexTop];
+        side2.innerHTML = cycleArray(this.content, indexSide)[nextIndex];
+    } else {
+        nextIndex = (dir === "LEFT" ? indexSide - 1 : indexSide + 1);
+        side1 = this.sides[cycleArray(sides, indexSide)];
+        side2 = this.sides[cycleArray(sides, nextIndex)];
+        side1.innerHTML = cycleArray(this.content, indexSide)[1];
+        side2.innerHTML = cycleArray(this.content, nextIndex)[1];
     }
 }
 
@@ -167,6 +213,7 @@ UniCube.prototype._handleMousemove = function(movedMouse) {
 
     mouse.last.x = movedMouse.x;
     mouse.last.y = movedMouse.y;
+    this._setContent();
 }
 
 UniCube.prototype._getTouchDirection = function(movedMouse) {
@@ -194,6 +241,12 @@ UniCube.prototype._directionDisabled = function() {
     } else if (this.direction === "RIGHT" || this.direction === "LEFT") {
         return this.x >= 90 || this.x <= -90;
     }
+}
+
+function cycleArray(array, index) {
+    var len = array.length;
+    index = index < 0 ? len - (-index % len) : index % len || 0;
+    return array[index];
 }
 
 function forward(v1, v2) {
