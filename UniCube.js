@@ -43,7 +43,7 @@ UniCube.prototype.flip = function(dir) {
         this.horizontalFlip = dir === "UP" || dir === "DOWN";
     }
 
-    if (this.direction !== null) {
+    if (this.direction && !this._directionDisabled()) {
         this._setContent();
     }
 
@@ -56,7 +56,10 @@ UniCube.prototype.flip = function(dir) {
     } else if (dir === "DOWN") {
         this.move({x: this.x + 90});
     }
-    this._setContent();
+
+    if (this.direction && !this._directionDisabled()) {
+        this._setContent();
+    }
 }
 
 UniCube.prototype.reset = function() {
@@ -121,8 +124,10 @@ UniCube.prototype._setContent = function() {
         nextIndex = (dir === "LEFT" ? indexSide - 1 : indexSide + 1);
         side1 = this.sides[cycleArray(sides, indexSide)];
         side2 = this.sides[cycleArray(sides, nextIndex)];
-        side1.innerHTML = cycleArray(this.content, indexSide)[1];
-        side2.innerHTML = cycleArray(this.content, nextIndex)[1];
+        var content1 = cycleArray(this.content, indexSide);
+        var content2 = cycleArray(this.content, nextIndex);
+        side1.innerHTML = Array.isArray(content1) ? content1[1] : content1;
+        side2.innerHTML = Array.isArray(content2) ? content2[1] : content1;
     }
 }
 
@@ -154,8 +159,7 @@ UniCube.prototype._bindKeydown = function() {
             return _this.reset();
         }
         if (evt.keyCode >= 37 && evt.keyCode <= 40) {
-            _this.direction = directions[evt.keyCode - 37];
-            _this.flip(_this.direction);
+            _this.flip(directions[evt.keyCode - 37]);
         }
     });
 
@@ -282,10 +286,12 @@ UniCube.prototype._getTouchDirection = function(movedMouse) {
 }
 
 UniCube.prototype._directionDisabled = function() {
+    var index = Math.floor(-this.y / 90) || 0;
+    var content = cycleArray(this.content, index);
     if (this.direction === "UP") {
-        return this.x <= -90;
+        return this.x <= -90 || !Array.isArray(content);
     } else if (this.direction === "DOWN") {
-        return this.x >= 90;
+        return this.x >= 90 || !Array.isArray(content);
     } else if (this.direction === "RIGHT" || this.direction === "LEFT") {
         return this.x >= 90 || this.x <= -90;
     }
