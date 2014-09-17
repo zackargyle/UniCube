@@ -62,6 +62,10 @@ UniCube.prototype.flip = function(dir) {
     }
 }
 
+UniCube.prototype.appendValue = function(data) {
+    this.content.push(data);
+}
+
 UniCube.prototype.reset = function() {
     this.move({x: 0, y: 0});
 }
