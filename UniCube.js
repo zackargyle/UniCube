@@ -130,8 +130,19 @@ UniCube.prototype._setContent = function() {
         side2 = this.sides[cycleArray(sides, nextIndex)];
         var content1 = cycleArray(this.content, indexSide);
         var content2 = cycleArray(this.content, nextIndex);
-        side1.innerHTML = Array.isArray(content1) ? content1[1] : content1;
-        side2.innerHTML = Array.isArray(content2) ? content2[1] : content2;
+
+        if (content1 instanceof HTMLElement) {
+            side1.innerHTML = "";
+            side1.appendChild(Array.isArray(content1) ? content1[1] : content1);
+        } else {
+            side1.innerHTML = Array.isArray(content1) ? content1[1] : content1;
+        }
+        if (content2 instanceof HTMLElement) {
+            side2.innerHTML = "";
+            side2.appendChild(Array.isArray(content2) ? content2[1] : content2);
+        } else {
+            side2.innerHTML = Array.isArray(content2) ? content2[1] : content2;
+        }
     }
 }
 
