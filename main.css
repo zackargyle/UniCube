@@ -89,7 +89,7 @@ h2 {
 }
 
 .unicube-bottom {
-    -webkit-transform: rotateX(-90deg) rotate(180deg) translateZ(200px);
-    -moz-transform: rotateX(-90deg) rotate(180deg) translateZ(200px);
-    transform: rotateX(-90deg) rotate(180deg) translateZ(200px);
+    -webkit-transform: rotateX(-90deg) translateZ(200px);
+    -moz-transform: rotateX(-90deg) translateZ(200px);
+    transform: rotateX(-90deg) translateZ(200px);
 }

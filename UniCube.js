@@ -40,6 +40,7 @@ function UniCube(cube, content) {
 UniCube.prototype.flip = function(dir) {
     if (directions.indexOf(dir) !== -1) {
         this.direction = dir;
+        this.horizontalFlip = dir === "UP" || dir === "DOWN";
     }
 
     if (this.direction !== null) {
@@ -55,6 +56,7 @@ UniCube.prototype.flip = function(dir) {
     } else if (dir === "DOWN") {
         this.move({x: this.x + 90});
     }
+    this._setContent();
 }
 
 UniCube.prototype.reset = function() {
@@ -103,12 +105,15 @@ UniCube.prototype._setContent = function() {
         if (indexTop === 2) {
             side1 = this.sides.top;
             side2 = this.sides[cycleArray(sides, indexSide)];
+            this._rotate("top");
         } else if (indexTop === 0) {
             side1 = this.sides.bottom;
             side2 = this.sides[cycleArray(sides, indexSide)];
+            this._rotate("bottom");
         } else {
             side1 = this.sides[cycleArray(sides, indexSide)];
             side2 = dir === "UP" ? this.sides.top : this.sides.bottom;
+            this._rotate(dir === "UP" ? "top" : "bottom");
         }
         side1.innerHTML = cycleArray(this.content, indexSide)[indexTop];
         side2.innerHTML = cycleArray(this.content, indexSide)[nextIndex];
@@ -119,6 +124,18 @@ UniCube.prototype._setContent = function() {
         side1.innerHTML = cycleArray(this.content, indexSide)[1];
         side2.innerHTML = cycleArray(this.content, nextIndex)[1];
     }
+}
+
+UniCube.prototype._rotate = function(sideName) {
+    var transform = "";
+    if (sideName === "top") {
+        transform += "translateY(-200px) rotateX(90deg) ";
+        transform += "rotateZ(" + this.y + "deg)";
+    } else {
+        transform += "translateY(200px) rotateX(-90deg) ";
+        transform += "rotateZ(" + -this.y + "deg)";
+    }
+    this.sides[sideName].style[transformProp] = transform;
 }
 
 UniCube.prototype._settle = function() {
