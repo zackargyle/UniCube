@@ -178,7 +178,7 @@ UniCube.prototype._bindKeydown = function() {
         }
     });
 
-    document.addEventListener("mousedown", startHandler);
+    this.el.addEventListener("mousedown", startHandler);
     document.addEventListener("touchstart", startHandler);
 
     function startHandler(evt) {
@@ -194,11 +194,12 @@ UniCube.prototype._bindKeydown = function() {
         _this.direction = null;
         _this.inMovement = true;
 
-        document.addEventListener("mousemove", moveHandler);
-        document.addEventListener("touchmove", moveHandler);
+        _this.el.addEventListener("mousemove", moveHandler);
+        _this.el.addEventListener("touchmove", moveHandler);
 
-        document.addEventListener("mouseup", stopHandler);
-        document.addEventListener("touchend", stopHandler);
+        _this.el.addEventListener("mouseup", stopHandler);
+        _this.el.addEventListener("touchend", stopHandler);
+        _this.el.addEventListener("mouseout", stopHandler);
     }
 
     function moveHandler(event) {
@@ -212,8 +213,8 @@ UniCube.prototype._bindKeydown = function() {
     }
 
     function stopHandler() {
-        document.removeEventListener("mousemove", moveHandler);
-        document.removeEventListener("touchmove", moveHandler);
+        _this.el.removeEventListener("mousemove", moveHandler);
+        _this.el.removeEventListener("touchmove", moveHandler);
         _this._settle();
         _this.inMovement = false;
     }
