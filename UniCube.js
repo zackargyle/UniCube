@@ -127,7 +127,7 @@ UniCube.prototype._setContent = function() {
         var content1 = cycleArray(this.content, indexSide);
         var content2 = cycleArray(this.content, nextIndex);
         side1.innerHTML = Array.isArray(content1) ? content1[1] : content1;
-        side2.innerHTML = Array.isArray(content2) ? content2[1] : content1;
+        side2.innerHTML = Array.isArray(content2) ? content2[1] : content2;
     }
 }
 
@@ -247,7 +247,7 @@ UniCube.prototype._createSides = function() {
     var sides = ["front", "right", "back", "left", "top", "bottom"];
     for (var i = 0, l = sides.length; i < l; ++i) {
         var side = document.createElement("div");
-        side.className = "unicube-" + sides[i];
+        side.className = "unicube-side unicube-" + sides[i];
         this.el.appendChild(side);
         this.sides[sides[i]] = side;
     }
@@ -300,7 +300,11 @@ UniCube.prototype._directionDisabled = function() {
 function cycleArray(array, index) {
     var len = array.length;
     index = index < 0 ? len - (-index % len) : index % len || 0;
-    return array[index];
+    if (index >= len) {
+        return cycleArray(array, index);
+    } else {
+        return array[index];
+    }
 }
 
 function forward(v1, v2) {
