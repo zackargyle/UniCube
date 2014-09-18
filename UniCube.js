@@ -1,10 +1,11 @@
 
 var UniCube = (function() {
+
     var el = document.createElement('div'),
-    transformProps = 'transform WebkitTransform MozTransform OTransform msTransform'.split(' '),
-    transformProp = support(transformProps),
-    transitionDuration = 'transitionDuration WebkitTransitionDuration MozTransitionDuration OTransitionDuration msTransitionDuration'.split(' '),
-    transitionDurationProp = support(transitionDuration);
+        transformProps = 'transform WebkitTransform MozTransform OTransform msTransform'.split(' '),
+        transformProp = support(transformProps),
+        transitionDuration = 'transitionDuration WebkitTransitionDuration MozTransitionDuration OTransitionDuration msTransitionDuration'.split(' '),
+        transitionDurationProp = support(transitionDuration);
 
     function support(props) {
         for(var i = 0, l = props.length; i < l; i++) {
@@ -28,6 +29,8 @@ var UniCube = (function() {
         this.x = 0;
         this.y = 0;
         this.el = cube;
+        this.width = cube.offsetWidth;
+        this.height = cube.offsetHeight;
 
         var d = touch ? 50 : 200;
         this.el.style[transitionDurationProp] = d + "ms";
@@ -150,10 +153,10 @@ var UniCube = (function() {
     UniCube.prototype._rotate = function(sideName) {
         var transform = "";
         if (sideName === "top") {
-            transform += "translateY(-200px) rotateX(90deg) ";
+            transform += "translateY(-" + (this.height / 2) + "px) rotateX(90deg) ";
             transform += "rotateZ(" + this.y + "deg)";
         } else {
-            transform += "translateY(200px) rotateX(-90deg) ";
+            transform += "translateY("+ (this.height / 2) +"px) rotateX(-90deg) ";
             transform += "rotateZ(" + -this.y + "deg)";
         }
         this.sides[sideName].style[transformProp] = transform;
@@ -265,6 +268,9 @@ var UniCube = (function() {
         for (var i = 0, l = sides.length; i < l; ++i) {
             var side = document.createElement("div");
             side.className = "unicube-side unicube-" + sides[i];
+            side.style.width = this.width + "px";
+            side.style.height = this.height + "px";
+            side.style[transformProp] = getTransform(sides[i], this.width / 2);
             this.el.appendChild(side);
             this.sides[sides[i]] = side;
         }
@@ -311,6 +317,23 @@ var UniCube = (function() {
             return this.x >= 90 || !Array.isArray(content);
         } else if (this.direction === "RIGHT" || this.direction === "LEFT") {
             return this.x >= 90 || this.x <= -90;
+        }
+    }
+
+    function getTransform(name, width) {
+        switch (name) {
+            case "front":
+                return "translateZ("+ width +"px)";
+            case "right":
+                return "rotateY(90deg) translateZ("+ width +"px)";
+            case "back":
+                return "rotateY(180deg) translateZ("+ width +"px)";
+            case "left":
+                return "rotateY(-90deg) translateZ("+ width +"px)";
+            case "top":
+                return "rotateX(90deg) translateZ("+ width +"px)";
+            case "bottom":
+                return "rotateX(-90deg) translateZ("+ width +"px)";
         }
     }
 

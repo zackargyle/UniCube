@@ -11,11 +11,14 @@
     transform: scale(0.75,0.75);
 }
 
+#cube1 {
+    height: 300px;
+    width: 300px;
+}
+
 .unicube {
     position: relative;
     margin: 0 auto 100px;
-    height: 400px;
-    width: 400px;
     -webkit-transition: -webkit-transform 50ms linear;
     -webkit-transform-style: preserve-3d;
     -webkit-transform: rotateX(0deg) rotateY(0deg);
@@ -33,9 +36,7 @@
 
 .unicube > div {
     position: absolute;
-    height: 360px;
-    width: 360px;
-    padding: 20px;
+    box-sizing: border-box;
     background-color: rgba(30, 30, 30, 1);
     font-size: 2em;
     text-align: center;
@@ -43,40 +44,4 @@
     color: #fff;
     border: 1px solid #555;
     border-radius: 3px;
-}
-
-.unicube-front {
-    -webkit-transform: translateZ(200px);
-    -moz-transform: translateZ(200px);
-    transform: translateZ(200px);
-}
-
-.unicube-right {
-    -webkit-transform: rotateY(90deg) translateZ(200px);
-    -moz-transform: rotateY(90deg) translateZ(200px);
-    transform: rotateY(90deg) translateZ(200px);
-}
-
-.unicube-back {
-    -webkit-transform: rotateY(180deg) translateZ(200px);
-    -moz-transform: rotateY(180deg) translateZ(200px);
-    transform: rotateY(180deg) translateZ(200px);
-}
-
-.unicube-left {
-    -webkit-transform: rotateY(-90deg) translateZ(200px);
-    -moz-transform: rotateY(-90deg) translateZ(200px);
-    transform: rotateY(-90deg) translateZ(200px);
-}
-
-.unicube-top  {
-    -webkit-transform: rotateX(90deg) translateZ(200px);
-    -moz-transform: rotateX(90deg) translateZ(200px);
-    transform: rotateX(90deg) translateZ(200px);
-}
-
-.unicube-bottom {
-    -webkit-transform: rotateX(-90deg) translateZ(200px);
-    -moz-transform: rotateX(-90deg) translateZ(200px);
-    transform: rotateX(-90deg) translateZ(200px);
 }
