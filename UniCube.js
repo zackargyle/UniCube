@@ -26,6 +26,8 @@ var UniCube = (function() {
         this.inMovement = false;
         this.direction = null;
         this.content = content;
+        this.side1 = 0;
+        this.side2 = 1;
         this.x = 0;
         this.y = 0;
         this.el = cube;
@@ -126,27 +128,36 @@ var UniCube = (function() {
                 side2 = dir === "UP" ? this.sides.top : this.sides.bottom;
                 this._rotate(dir === "UP" ? "top" : "bottom");
             }
-            side1.innerHTML = cycleArray(this.content, indexSide)[indexTop];
-            side2.innerHTML = cycleArray(this.content, indexSide)[nextIndex];
+
+            if (this.side1 === side1 && this.side2 === side2) return ;
+
+            this._setSide(side1, cycleArray(this.content, indexSide)[indexTop]);
+            this._setSide(side2, cycleArray(this.content, indexSide)[nextIndex]);
+
         } else {
             nextIndex = (dir === "LEFT" ? indexSide - 1 : indexSide + 1);
             side1 = this.sides[cycleArray(sides, indexSide)];
             side2 = this.sides[cycleArray(sides, nextIndex)];
-            var content1 = cycleArray(this.content, indexSide);
-            var content2 = cycleArray(this.content, nextIndex);
 
-            if (content1 instanceof HTMLElement) {
-                side1.innerHTML = "";
-                side1.appendChild(Array.isArray(content1) ? content1[1] : content1);
-            } else {
-                side1.innerHTML = Array.isArray(content1) ? content1[1] : content1;
-            }
-            if (content2 instanceof HTMLElement) {
-                side2.innerHTML = "";
-                side2.appendChild(Array.isArray(content2) ? content2[1] : content2);
-            } else {
-                side2.innerHTML = Array.isArray(content2) ? content2[1] : content2;
-            }
+            if (this.side1 === side1 && this.side2 === side2) return ;
+
+            this._setSide(side1, cycleArray(this.content, indexSide));
+            this._setSide(side2, cycleArray(this.content, nextIndex));
+        }
+
+        this.side1 = side1;
+        this.side2 = side2;
+    }
+
+    UniCube.prototype._setSide = function(side, content) {
+        if (Array.isArray(content)) {
+            content = content[1];
+        }
+        if (content instanceof HTMLElement) {
+            side.innerHTML = "";
+            side.appendChild(content);
+        } else {
+            side.innerHTML = content;
         }
     }
 
