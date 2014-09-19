@@ -200,6 +200,7 @@ var UniCube = (function() {
             delete mouse.last;
             if(evt.target.nodeName === "a") return true;
             if (_this.touchDisabled) return ;
+            evt.preventDefault();
 
             evt.touches ? evt = evt.touches[0] : null;
             mouse.start.x = evt.pageX;
