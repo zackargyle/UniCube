@@ -3,6 +3,8 @@ UniCube
 
 A Dynamic Content 3d Cube with Touch/Swipe
 
+See a live demo at http://zackargyle.github.io/UniCube/
+
 Creating a Cube
 
 1. Add a viewport
